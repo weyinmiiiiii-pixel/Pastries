@@ -47,18 +47,18 @@ export function LeftSidebar({
       `}>
         <div className="space-y-6">
           
-          {/* Header Mobile Close & Brand Badge */}
+          {/* Header Mobile Close & Pastries Badge */}
           <div className="flex items-center justify-between border-b border-[var(--border-subtle)] pb-4">
-            <div className="flex items-center gap-2.5 px-3 py-1.5 rounded-full border-2 border-[#E53935] bg-red-50/50">
+            <div className="flex items-center gap-2.5 px-3 py-1.5 rounded-full border-2 border-[#E53935] bg-red-50/60">
               <div className="w-7 h-7 rounded-full bg-[#E53935] text-white flex items-center justify-center text-sm">
-                🎂
+                🥐
               </div>
               <div className="flex flex-col">
                 <span className="font-serif text-base font-bold text-[#E53935] leading-none">
-                  Mamana
+                  Pastries
                 </span>
                 <span className="text-[9px] font-bold text-stone-600 uppercase">
-                  Cakes & Pastries
+                  Bakery & Pâtisserie
                 </span>
               </div>
             </div>
@@ -75,7 +75,7 @@ export function LeftSidebar({
           {/* Main App Navigation Section */}
           <div className="space-y-1">
             <span className="text-[10px] uppercase font-bold tracking-widest text-[var(--text-light)] px-3 block mb-2">
-              Menu Navigation
+              Boutique Menu
             </span>
 
             <button
@@ -103,7 +103,7 @@ export function LeftSidebar({
             >
               <div className="flex items-center gap-3">
                 <Sparkles className="w-4 h-4 text-amber-300" />
-                <span>Custom Cake & Tart</span>
+                <span>Custom Cake Studio</span>
               </div>
               <span className="px-2 py-0.5 text-[9px] uppercase font-black bg-amber-400 text-black rounded-full">
                 Custom
@@ -120,7 +120,7 @@ export function LeftSidebar({
             >
               <div className="flex items-center gap-3">
                 <Clock className="w-4 h-4 text-[#E53935]" />
-                <span>Live Bake Schedule</span>
+                <span>Live Oven Bake</span>
               </div>
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
             </button>
@@ -130,7 +130,7 @@ export function LeftSidebar({
           <div className="space-y-2">
             <div className="flex items-center justify-between px-3">
               <span className="text-[10px] uppercase font-bold tracking-widest text-[var(--text-light)]">
-                Categories
+                Bake Categories
               </span>
               <Compass className="w-3.5 h-3.5 text-[#E53935]" />
             </div>
@@ -174,7 +174,7 @@ export function LeftSidebar({
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Music className={`w-4 h-4 ${isAudioPlaying ? 'text-[#E53935] animate-bounce' : 'text-[var(--text-muted)]'}`} />
-                <span className="text-xs font-bold text-[var(--text-main)]">Bakery Music</span>
+                <span className="text-xs font-bold text-[var(--text-main)]">Bakery Sounds</span>
               </div>
               <button
                 onClick={() => setIsAudioPlaying(!isAudioPlaying)}
@@ -195,10 +195,10 @@ export function LeftSidebar({
         <div className="pt-4 border-t border-[var(--border-subtle)] space-y-2">
           <div className="flex items-center gap-2 text-[11px] font-bold text-[var(--text-muted)]">
             <MapPin className="w-3.5 h-3.5 text-[#E53935]" />
-            <span>Mamana Cakes & Pastries</span>
+            <span>Pastries Artisanal Bakery</span>
           </div>
           <div className="flex items-center justify-between text-[10px] text-[var(--text-light)]">
-            <span>© 2026 Mamana</span>
+            <span>© 2026 Pastries</span>
             <span className="text-emerald-600 font-bold">🟢 Open Daily</span>
           </div>
         </div>
