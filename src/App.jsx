@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Header } from './components/Header';
+import { LeftSidebar } from './components/LeftSidebar';
+import { RightSidebar } from './components/RightSidebar';
 import { Hero } from './components/Hero';
+import { PictorialCategoryGrid } from './components/PictorialCategoryGrid';
 import { PastryCard } from './components/PastryCard';
 import { PastryModal } from './components/PastryModal';
 import { CustomPastryBuilder } from './components/CustomPastryBuilder';
@@ -9,7 +12,7 @@ import { CartDrawer } from './components/CartDrawer';
 import { CheckoutModal } from './components/CheckoutModal';
 import { Footer } from './components/Footer';
 import { PASTRIES_DATA, CATEGORIES, REVIEWS } from './data/pastriesData';
-import { Star, Sparkles, Filter, Coffee, ShieldCheck } from 'lucide-react';
+import { Star, Sparkles, Filter, Coffee, ShieldCheck, Heart, Award, Flame } from 'lucide-react';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('menu'); // 'menu' | 'builder' | 'oven'
@@ -17,6 +20,11 @@ export default function App() {
   const [searchTerm, setSearchTerm] = useState('');
   const [currency, setCurrency] = useState('USD');
   const [theme, setTheme] = useState('light');
+  const [isAudioPlaying, setIsAudioPlaying] = useState(false);
+  const [isOpenMobile, setIsOpenMobile] = useState(false);
+
+  // Wishlist state
+  const [wishlist, setWishlist] = useState(['p1', 'c1']);
   
   const [cartItems, setCartItems] = useState([
     {
@@ -38,6 +46,15 @@ export default function App() {
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
+
+  // Wishlist Handler
+  const handleToggleWishlist = (pastryId) => {
+    setWishlist(prev => 
+      prev.includes(pastryId) 
+        ? prev.filter(id => id !== pastryId)
+        : [...prev, pastryId]
+    );
+  };
 
   // Filter pastries based on selected category & search input
   const filteredPastries = PASTRIES_DATA.filter(p => {
@@ -87,7 +104,7 @@ export default function App() {
   return (
     <div className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-main)] flex flex-col font-sans transition-colors duration-300">
       
-      {/* Header Bar */}
+      {/* Top Header Bar */}
       <Header
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
@@ -99,40 +116,66 @@ export default function App() {
         setTheme={setTheme}
         currency={currency}
         setCurrency={setCurrency}
+        isAudioPlaying={isAudioPlaying}
+        setIsAudioPlaying={setIsAudioPlaying}
+        isOpenMobile={isOpenMobile}
+        setIsOpenMobile={setIsOpenMobile}
       />
 
-      {/* Main Content Area */}
-      <main className="flex-grow">
+      {/* Main Website Three-Column Grid Layout */}
+      <div className="flex-grow w-full max-w-[1600px] mx-auto flex gap-6 px-4 py-6">
         
-        {/* Hero Section */}
-        {activeTab === 'menu' && (
-          <Hero
-            onExploreClick={() => {
-              const el = document.getElementById('pastry-catalog');
-              if (el) el.scrollIntoView({ behavior: 'smooth' });
-            }}
-            onBuilderClick={() => setActiveTab('builder')}
-          />
-        )}
+        {/* Persistent Left Sidebar */}
+        <LeftSidebar
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          selectedCategory={selectedCategory}
+          setSelectedCategory={setSelectedCategory}
+          isAudioPlaying={isAudioPlaying}
+          setIsAudioPlaying={setIsAudioPlaying}
+          wishlistCount={wishlist.length}
+          isOpenMobile={isOpenMobile}
+          setIsOpenMobile={setIsOpenMobile}
+        />
 
-        {/* Tab View 1: Pastry Catalog Menu */}
-        {activeTab === 'menu' && (
-          <div id="pastry-catalog" className="py-12">
-            <div className="container space-y-8">
+        {/* Central Stage Main Content Area */}
+        <main className="flex-1 min-w-0 space-y-10">
+          
+          {/* Hero Banner Showcase */}
+          {activeTab === 'menu' && (
+            <Hero
+              onExploreClick={() => {
+                const el = document.getElementById('pastry-catalog');
+                if (el) el.scrollIntoView({ behavior: 'smooth' });
+              }}
+              onBuilderClick={() => setActiveTab('builder')}
+              onQuickAdd={handleAddToCart}
+            />
+          )}
+
+          {/* Menu Catalog View */}
+          {activeTab === 'menu' && (
+            <div id="pastry-catalog" className="space-y-8">
               
-              {/* Category Pills & Controls Header */}
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-[var(--border-subtle)]">
+              {/* Pictorial Category Cards */}
+              <PictorialCategoryGrid
+                selectedCategory={selectedCategory}
+                setSelectedCategory={setSelectedCategory}
+              />
+
+              {/* Category Filter Pills & Search Results Header */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[var(--border-subtle)]">
                 <div>
-                  <h2 className="font-serif text-3xl font-bold text-[var(--text-main)]">
-                    Artisanal Selection
+                  <h2 className="font-serif text-2xl md:text-3xl font-black text-[var(--text-main)]">
+                    {selectedCategory === 'All' ? 'Artisanal Daily Catalog' : `${selectedCategory} Collection`}
                   </h2>
                   <p className="text-xs text-[var(--text-muted)]">
                     Hand-crafted daily using 100% Isigny AOP Normandy Butter and organic flour.
                   </p>
                 </div>
 
-                {/* Category Filter Pills */}
-                <div className="flex items-center gap-2 overflow-x-auto pb-2 md:pb-0">
+                {/* Filter Pills */}
+                <div className="flex items-center gap-2 overflow-x-auto pb-2 sm:pb-0">
                   {CATEGORIES.map(cat => (
                     <button
                       key={cat}
@@ -151,13 +194,15 @@ export default function App() {
 
               {/* Grid of Pastry Cards */}
               {filteredPastries.length === 0 ? (
-                <div className="text-center py-16 space-y-3">
-                  <div className="text-4xl">🔍</div>
-                  <h3 className="font-serif text-xl font-bold text-[var(--text-main)]">No pastries found</h3>
-                  <p className="text-xs text-[var(--text-muted)]">Try searching for another keyword or change your filter.</p>
+                <div className="text-center py-16 space-y-3 bg-[var(--bg-card)] rounded-3xl border border-[var(--border-light)] p-8">
+                  <div className="text-5xl">🥐</div>
+                  <h3 className="font-serif text-2xl font-bold text-[var(--text-main)]">No pastries match your search</h3>
+                  <p className="text-xs text-[var(--text-muted)] max-w-sm mx-auto">
+                    Try searching for another keyword or select "All" categories to view all delicious offerings.
+                  </p>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {filteredPastries.map(pastry => (
                     <PastryCard
                       key={pastry.id}
@@ -165,38 +210,38 @@ export default function App() {
                       onQuickAdd={(p) => handleAddToCart(p, 1)}
                       onViewDetails={(p) => setSelectedPastry(p)}
                       currency={currency}
+                      isWishlisted={wishlist.includes(pastry.id)}
+                      onToggleWishlist={handleToggleWishlist}
                     />
                   ))}
                 </div>
               )}
 
             </div>
-          </div>
-        )}
+          )}
 
-        {/* Tab View 2: Custom Tart Builder Studio */}
-        {activeTab === 'builder' && (
-          <CustomPastryBuilder
-            onAddCustomToCart={handleAddToCart}
-            currency={currency}
-          />
-        )}
+          {/* Custom Tart Studio View */}
+          {activeTab === 'builder' && (
+            <CustomPastryBuilder
+              onAddCustomToCart={handleAddToCart}
+              currency={currency}
+            />
+          )}
 
-        {/* Tab View 3: Oven Bake Tracker */}
-        {activeTab === 'oven' && (
-          <OvenTracker />
-        )}
+          {/* Live Warm Oven Tracker View */}
+          {activeTab === 'oven' && (
+            <OvenTracker />
+          )}
 
-        {/* Customer Reviews Section */}
-        <section className="py-16 bg-[var(--bg-secondary)] border-t border-[var(--border-subtle)]">
-          <div className="container space-y-8">
+          {/* Customer Reviews Section */}
+          <section className="p-8 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-light)] shadow-md space-y-8">
             <div className="text-center max-w-xl mx-auto space-y-2">
-              <div className="inline-flex items-center gap-1 text-amber-500">
+              <div className="inline-flex items-center gap-1 text-amber-400">
                 {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-4 h-4 fill-amber-400" />
+                  <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
                 ))}
               </div>
-              <h3 className="font-serif text-3xl font-bold text-[var(--text-main)]">
+              <h3 className="font-serif text-2xl md:text-3xl font-black text-[var(--text-main)]">
                 Loved by Paris & Worldwide Pastry Lovers
               </h3>
               <p className="text-xs text-[var(--text-muted)]">Read authentic feedback from our daily customers.</p>
@@ -204,25 +249,35 @@ export default function App() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {REVIEWS.map((rev, i) => (
-                <div key={i} className="p-6 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-subtle)] shadow-sm space-y-4">
+                <div key={i} className="p-6 rounded-2xl bg-[var(--bg-secondary)] border border-[var(--border-subtle)] space-y-4 hover:border-[var(--accent-gold)] transition-colors">
                   <div className="flex items-center justify-between text-xs">
-                    <span className="font-bold text-[var(--text-main)]">{rev.name}</span>
-                    <span className="text-[var(--text-light)]">{rev.date}</span>
+                    <span className="font-extrabold text-[var(--text-main)]">{rev.name}</span>
+                    <span className="text-[var(--text-light)] font-mono">{rev.date}</span>
                   </div>
                   <p className="text-xs text-[var(--text-muted)] italic leading-relaxed">
                     "{rev.comment}"
                   </p>
-                  <div className="flex items-center justify-between text-[11px] text-[var(--accent-gold)] pt-2 border-t border-[var(--border-subtle)] font-semibold">
+                  <div className="flex items-center justify-between text-[11px] text-[var(--accent-gold)] pt-2 border-t border-[var(--border-subtle)] font-bold">
                     <span>{rev.city}</span>
                     <span>Verified Gourmet Order</span>
                   </div>
                 </div>
               ))}
             </div>
-          </div>
-        </section>
+          </section>
 
-      </main>
+        </main>
+
+        {/* Persistent Right Sidebar */}
+        <RightSidebar
+          cartItems={cartItems}
+          setIsCartOpen={setIsCartOpen}
+          onQuickAdd={handleAddToCart}
+          currency={currency}
+          setActiveTab={setActiveTab}
+        />
+
+      </div>
 
       {/* Detail Modal */}
       <PastryModal
