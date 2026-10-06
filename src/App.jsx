@@ -10,9 +10,10 @@ import { CustomPastryBuilder } from './components/CustomPastryBuilder';
 import { OvenTracker } from './components/OvenTracker';
 import { CartDrawer } from './components/CartDrawer';
 import { CheckoutModal } from './components/CheckoutModal';
+import { WhatsAppButton } from './components/WhatsAppButton';
 import { Footer } from './components/Footer';
 import { PASTRIES_DATA, CATEGORIES, REVIEWS } from './data/pastriesData';
-import { Star, Sparkles, Filter, Coffee, ShieldCheck, Heart, Award, Flame } from 'lucide-react';
+import { Star } from 'lucide-react';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('menu'); // 'menu' | 'builder' | 'oven'
@@ -149,7 +150,6 @@ export default function App() {
                 if (el) el.scrollIntoView({ behavior: 'smooth' });
               }}
               onBuilderClick={() => setActiveTab('builder')}
-              onQuickAdd={handleAddToCart}
             />
           )}
 
@@ -157,7 +157,7 @@ export default function App() {
           {activeTab === 'menu' && (
             <div id="pastry-catalog" className="space-y-8">
               
-              {/* Pictorial Category Cards */}
+              {/* Pictorial Category Grid matching reference screenshot */}
               <PictorialCategoryGrid
                 selectedCategory={selectedCategory}
                 setSelectedCategory={setSelectedCategory}
@@ -166,11 +166,11 @@ export default function App() {
               {/* Category Filter Pills & Search Results Header */}
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[var(--border-subtle)]">
                 <div>
-                  <h2 className="font-serif text-2xl md:text-3xl font-black text-[var(--text-main)]">
-                    {selectedCategory === 'All' ? 'Artisanal Daily Catalog' : `${selectedCategory} Collection`}
-                  </h2>
+                  <h3 className="font-serif text-2xl font-bold text-[var(--text-main)]">
+                    {selectedCategory === 'All' ? 'All Cakes & Event Bites' : `${selectedCategory} Selection`}
+                  </h3>
                   <p className="text-xs text-[var(--text-muted)]">
-                    Hand-crafted daily using 100% Isigny AOP Normandy Butter and organic flour.
+                    Hand-crafted daily with premium ingredients and baked fresh to order.
                   </p>
                 </div>
 
@@ -182,7 +182,7 @@ export default function App() {
                       onClick={() => setSelectedCategory(cat)}
                       className={`px-4 py-2 rounded-full text-xs font-bold transition-all whitespace-nowrap ${
                         selectedCategory === cat
-                          ? 'bg-[var(--accent-gold)] text-white shadow-md'
+                          ? 'bg-[#E53935] text-white shadow-sm'
                           : 'bg-[var(--bg-secondary)] text-[var(--text-muted)] hover:text-[var(--text-main)] border border-[var(--border-subtle)]'
                       }`}
                     >
@@ -194,11 +194,11 @@ export default function App() {
 
               {/* Grid of Pastry Cards */}
               {filteredPastries.length === 0 ? (
-                <div className="text-center py-16 space-y-3 bg-[var(--bg-card)] rounded-3xl border border-[var(--border-light)] p-8">
-                  <div className="text-5xl">🥐</div>
-                  <h3 className="font-serif text-2xl font-bold text-[var(--text-main)]">No pastries match your search</h3>
+                <div className="text-center py-16 space-y-3 bg-[var(--bg-card)] rounded-3xl border border-[var(--border-subtle)] p-8">
+                  <div className="text-5xl">🎂</div>
+                  <h3 className="font-serif text-2xl font-bold text-[var(--text-main)]">No items found</h3>
                   <p className="text-xs text-[var(--text-muted)] max-w-sm mx-auto">
-                    Try searching for another keyword or select "All" categories to view all delicious offerings.
+                    Try searching for another keyword or select "All" to view all available bakes.
                   </p>
                 </div>
               ) : (
@@ -234,30 +234,30 @@ export default function App() {
           )}
 
           {/* Customer Reviews Section */}
-          <section className="p-8 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-light)] shadow-md space-y-8">
+          <section className="p-8 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-subtle)] shadow-sm space-y-8">
             <div className="text-center max-w-xl mx-auto space-y-2">
-              <div className="inline-flex items-center gap-1 text-amber-400">
+              <div className="inline-flex items-center gap-1 text-amber-500">
                 {[...Array(5)].map((_, i) => (
                   <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
                 ))}
               </div>
-              <h3 className="font-serif text-2xl md:text-3xl font-black text-[var(--text-main)]">
-                Loved by Paris & Worldwide Pastry Lovers
+              <h3 className="font-serif text-2xl md:text-3xl font-bold text-[var(--text-main)]">
+                Loved by Celebration & Event Hosts
               </h3>
               <p className="text-xs text-[var(--text-muted)]">Read authentic feedback from our daily customers.</p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {REVIEWS.map((rev, i) => (
-                <div key={i} className="p-6 rounded-2xl bg-[var(--bg-secondary)] border border-[var(--border-subtle)] space-y-4 hover:border-[var(--accent-gold)] transition-colors">
+                <div key={i} className="p-6 rounded-2xl bg-[var(--bg-secondary)] border border-[var(--border-subtle)] space-y-4 hover:border-[#E53935] transition-colors">
                   <div className="flex items-center justify-between text-xs">
-                    <span className="font-extrabold text-[var(--text-main)]">{rev.name}</span>
+                    <span className="font-bold text-[var(--text-main)]">{rev.name}</span>
                     <span className="text-[var(--text-light)] font-mono">{rev.date}</span>
                   </div>
                   <p className="text-xs text-[var(--text-muted)] italic leading-relaxed">
                     "{rev.comment}"
                   </p>
-                  <div className="flex items-center justify-between text-[11px] text-[var(--accent-gold)] pt-2 border-t border-[var(--border-subtle)] font-bold">
+                  <div className="flex items-center justify-between text-[11px] text-[#E53935] pt-2 border-t border-[var(--border-subtle)] font-bold">
                     <span>{rev.city}</span>
                     <span>Verified Gourmet Order</span>
                   </div>
@@ -278,6 +278,9 @@ export default function App() {
         />
 
       </div>
+
+      {/* Floating WhatsApp Action Button as in Screenshot */}
+      <WhatsAppButton />
 
       {/* Detail Modal */}
       <PastryModal

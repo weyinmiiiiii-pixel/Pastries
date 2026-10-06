@@ -1,6 +1,4 @@
 import React from 'react';
-import { CATEGORIES } from '../data/pastriesData';
-import { ChevronRight, Sparkles } from 'lucide-react';
 
 const CATEGORY_CARDS = [
   {
@@ -36,26 +34,26 @@ const CATEGORY_CARDS = [
 export function PictorialCategoryGrid({ selectedCategory, setSelectedCategory }) {
   return (
     <div className="space-y-4 mb-8">
-      <div className="flex items-center justify-between">
-        <div>
-          <h3 className="font-serif text-xl md:text-2xl font-black text-[var(--text-main)]">
-            Explore Pictorial Menu Collections
-          </h3>
-          <p className="text-xs text-[var(--text-muted)]">
-            Click any collection to filter our daily baked selection.
-          </p>
-        </div>
+      
+      {/* Section Header Matching Screenshot */}
+      <div className="text-center sm:text-left space-y-1">
+        <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[var(--text-main)]">
+          Featured Bakes & Small Chops
+        </h2>
+        <p className="text-sm text-[var(--text-muted)] font-sans">
+          Curated selection of our most popular event bites.
+        </p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-2">
         {CATEGORY_CARDS.map((item, idx) => (
           <div
             key={idx}
             onClick={() => setSelectedCategory(item.category)}
-            className={`group relative h-48 rounded-2xl overflow-hidden cursor-pointer border-2 transition-all duration-300 shadow-md hover:shadow-glow transform hover:-translate-y-1 ${
+            className={`group relative h-48 rounded-2xl overflow-hidden cursor-pointer border-2 transition-all duration-300 shadow-md hover:shadow-xl transform hover:-translate-y-1 ${
               selectedCategory === item.category
-                ? 'border-[var(--accent-gold)] ring-2 ring-[var(--accent-gold-light)]'
-                : 'border-[var(--border-light)]'
+                ? 'border-[#E53935] ring-2 ring-red-100'
+                : 'border-[var(--border-subtle)]'
             }`}
           >
             {/* Background Image */}
@@ -70,14 +68,14 @@ export function PictorialCategoryGrid({ selectedCategory, setSelectedCategory })
 
             {/* Badge Ribbon */}
             <div className="absolute top-3 left-3">
-              <span className="px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-[var(--gold-gradient)] text-white shadow-sm">
+              <span className="px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-[#E53935] text-white shadow-sm">
                 {item.badge}
               </span>
             </div>
 
             {/* Text Overlay */}
             <div className="absolute bottom-3 left-3 right-3 text-white space-y-0.5">
-              <h4 className="font-serif font-bold text-base leading-tight group-hover:text-amber-300 transition-colors">
+              <h4 className="font-serif font-bold text-base leading-tight group-hover:text-red-300 transition-colors">
                 {item.title}
               </h4>
               <p className="text-[11px] text-white/80 line-clamp-1 italic">
